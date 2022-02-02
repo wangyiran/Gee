@@ -4,20 +4,16 @@ import (
 	"fmt"
 	"net/http"
 
-	"./gee"
+	gee "./gee"
 )
 
 func main() {
-	r := gee.New()
-	r.GET("/", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintf(w, "URL.Path = %q\n", req.URL.Path)
+	hs := gee.NEW()
+	hs.GET("/", func(rw http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(rw, "path:%s", r.URL)
 	})
-	fmt.Println("asd")
-	r.GET("/hello", func(w http.ResponseWriter, req *http.Request) {
-		for k, v := range req.Header {
-			fmt.Fprintf(w, "Header[%q] = %q\n", k, v)
-		}
+	hs.GET("/hehe", func(rw http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(rw, "hehehe")
 	})
-
-	r.Run(":9999")
+	hs.RUN(":9999")
 }

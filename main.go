@@ -9,11 +9,18 @@ import (
 
 func main() {
 	hs := gee.NEW()
-	hs.GET("/", func(rw http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(rw, "path:%s", r.URL)
+	hs.GET("/", func(c *gee.Context) {
+		fmt.Fprintf(c.Writer, "path:%s", c.Req.URL)
 	})
-	hs.GET("/hehe", func(rw http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(rw, "hehehe")
+	hs.GET("/hehe", func(c *gee.Context) {
+		fmt.Fprintf(c.Writer, "hehehe")
 	})
+	hs.POST("/login", func(c *gee.Context) {
+		c.JSON(http.StatusOK, gee.H{
+			"username": c.PostForm("username"),
+			"password": c.PostForm("password"),
+		})
+	})
+
 	hs.RUN(":9999")
 }

@@ -4,34 +4,33 @@ import (
 	"net/http"
 )
 
-type HandleFunc func(*Context)
+type HandlerFunc func(c *Context)
 
 type Engine struct {
-	r router
+	r *Router
 }
 
 func (e *Engine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	c := newContext(w, r)
-	e.r.handle(c)
-
+	e.r.Handle(c)
 }
 
-func NEW() *Engine {
+func New() *Engine {
 	return &Engine{
-		r: *newRouter(),
+		r: newRouter(),
 	}
 }
 
-func (e *Engine) addRouter(method string, path string, handler HandleFunc) {
-	e.r.addRouter(method, path, handler)
+func (e *Engine) addRoute(method string, path string, handler HandlerFunc) {
+	e.r.addRoute(method, path, handler)
 }
 
-func (e *Engine) GET(path string, handler HandleFunc) {
-	e.addRouter("GET", path, handler)
+func (e *Engine) GET(path string, handler HandlerFunc) {
+	e.addRoute("GET", path, handler)
 }
 
-func (e *Engine) POST(path string, handler HandleFunc) {
-	e.addRouter("POST", path, handler)
+func (e *Engine) POST(path string, handler HandlerFunc) {
+	e.addRoute("POST", path, handler)
 }
 
 func (e *Engine) RUN(port string) error {
